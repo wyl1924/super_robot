@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: dev
+openai:
+  secret_key: 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
+  apiHost: http://127.0.0.1/

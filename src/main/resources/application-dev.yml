@@ -1,0 +1,34 @@
+server:
+  port: 8080
+spring:
+  web:
+    resources:
+      static-locations: classpath:/static
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-request-size: 1024MB #最大请求文件的大小
+      max-file-size: 1024MB #设置单个文件最大长度
+      file-size-threshold: 5MB #当文件达到多少时进行磁盘写
+swagger:
+  enable: true
+jwt:
+  header: Authorization
+  secret: bnBzPyUyMGJqenN0JTA/Pz8lMjAuY24=
+  #token有效期一天
+  expiration: 86400000
+  tokenHead: "Bearer "
+file:
+  url: D:\files
+logs:
+  path: D:\logs
+
+System:
+  Version: 1.0
+  Time: 20230414
+proxy: #如果在国内访问，使用这个https://api.openai.com/
+  ip: ""
+  port: 8899
+
+
+
