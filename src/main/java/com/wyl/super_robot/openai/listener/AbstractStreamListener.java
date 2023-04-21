@@ -84,7 +84,6 @@ public abstract class AbstractStreamListener extends EventSourceListener {
 
         if (text != null) {
             lastMessage += text;
-
             onMsg(text);
 
         }

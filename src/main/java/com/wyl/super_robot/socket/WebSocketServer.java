@@ -75,22 +75,21 @@ public class WebSocketServer {
         log.debug(message);
         try {
             SocketSession scoketSession = webSocketMap.get(session.getId());
-//            String messageContext = (String) LocalCache.CACHE.get(scoketSession.getUserId());
-//            List<Message> messages = new ArrayList<>();
-//            if (StrUtil.isNotBlank(messageContext)) {
-//                messages = JSONUtil.toList(messageContext, Message.class);
-//                if (messages.size() >= 10) {
-//                    messages = messages.subList(1, 10);
-//                }
-//                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
-//                messages.add(currentMessage);
-//            } else {
-//                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
-//                messages.add(currentMessage);
-//            }
-//            chatGPTStrreamUtil.chat(message, scoketSession.getUserId(),session);
-//            LocalCache.CACHE.put( scoketSession.getUserId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
-            okClientUnit.chat(message, scoketSession.getUserId(),session);
+            String messageContext = (String) LocalCache.CACHE.get(scoketSession.getUserId());
+            List<Message> messages = new ArrayList<>();
+            if (StrUtil.isNotBlank(messageContext)) {
+                messages = JSONUtil.toList(messageContext, Message.class);
+                if (messages.size() >= 10) {
+                    messages = messages.subList(1, 10);
+                }
+                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
+                messages.add(currentMessage);
+            } else {
+                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
+                messages.add(currentMessage);
+            }
+            chatGPTStrreamUtil.chat(messages, scoketSession.getUserId(),session);
+            LocalCache.CACHE.put( scoketSession.getUserId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         } catch (Exception e) {
             log.error(e.toString());
             log.error("", e);

@@ -34,10 +34,10 @@ public class WebSocketStreamListener  extends AbstractStreamListener {
                 session.getBasicRemote().sendText("[DONE]");
                 return;
             }
-            ObjectMapper mapper = new ObjectMapper();
-            ChatCompletionResponse completionResponse = mapper.readValue(message, ChatCompletionResponse.class); // 读取Json
-            String delta = mapper.writeValueAsString(completionResponse.getChoices().get(0).getDelta());
-            session.getBasicRemote().sendText(delta);
+//            ObjectMapper mapper = new ObjectMapper();
+//            ChatCompletionResponse completionResponse = mapper.readValue(message, ChatCompletionResponse.class); // 读取Json
+//            String delta = mapper.writeValueAsString(completionResponse.getChoices().get(0).getDelta());
+            session.getBasicRemote().sendText(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
