@@ -12,24 +12,24 @@ import java.math.BigDecimal;
  */
 @Data
 public class CreditGrantsResponse {
-    private String object;
+    public String object;
     /**
      * 总金额：美元
      */
     @JsonProperty("total_granted")
-    private BigDecimal totalGranted;
+    public BigDecimal totalGranted;
     /**
      * 总使用金额：美元
      */
     @JsonProperty("total_used")
-    private BigDecimal totalUsed;
+    public BigDecimal totalUsed;
     /**
      * 总剩余金额：美元
      */
     @JsonProperty("total_available")
-    private BigDecimal totalAvailable;
+    public BigDecimal totalAvailable;
     /**
      * 余额明细
      */
-    private Grants grants;
+    public Grants grants;
 }

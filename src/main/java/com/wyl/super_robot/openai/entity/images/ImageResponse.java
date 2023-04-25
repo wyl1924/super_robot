@@ -13,6 +13,6 @@ import java.util.List;
  */
 @Data
 public class ImageResponse implements Serializable {
-    private long created;
-    private List<Item> data;
+    public long created;
+    public List<Item> data;
 }

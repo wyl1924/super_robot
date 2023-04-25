@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wyl.super_robot.openai.ChatGPTStreamUtil;
-import com.wyl.super_robot.openai.OkClientUnit;
 import com.wyl.super_robot.openai.entity.LocalCache;
 import com.wyl.super_robot.openai.entity.chat.Message;
 import com.wyl.super_robot.utils.JsonConvertKeyUtil;
@@ -33,14 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/ws/{uid}")
 public class WebSocketServer {
     private static ChatGPTStreamUtil chatGPTStrreamUtil;
-    private static OkClientUnit okClientUnit;
     @Autowired
     public void setOrderService(ChatGPTStreamUtil openAiStreamClient) {
         this.chatGPTStrreamUtil = openAiStreamClient;
-    }
-    @Autowired
-    public void setOrderService(OkClientUnit okClientUnit) {
-        this.okClientUnit = okClientUnit;
     }
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。

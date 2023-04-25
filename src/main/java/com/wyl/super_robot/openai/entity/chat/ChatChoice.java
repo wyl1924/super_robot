@@ -8,17 +8,17 @@ import lombok.Data;
  */
 @Data
 public class ChatChoice {
-    private long index;
+    public long index;
     /**
      * 请求参数stream为true返回是delta
      */
     @JsonProperty("delta")
-    private Message delta;
+    public Message delta;
     /**
      * 请求参数stream为false返回是message
      */
     @JsonProperty("message")
-    private Message message;
+    public Message message;
     @JsonProperty("finish_reason")
-    private String finishReason;
+    public String finishReason;
 }

@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 public class Item implements Serializable {
-    private String url;
+    public String url;
     @JsonProperty("b64_json")
-    private String b64Json;
+    public String b64Json;
 }

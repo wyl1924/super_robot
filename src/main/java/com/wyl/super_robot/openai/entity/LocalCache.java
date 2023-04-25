@@ -16,7 +16,7 @@ public class LocalCache {
     /**
      * 清理间隔
      */
-    private static final long CLEAN_TIMEOUT = 5 * DateUnit.MINUTE.getMillis();
+    public static final long CLEAN_TIMEOUT = 5 * DateUnit.MINUTE.getMillis();
     /**
      * 缓存对象
      */

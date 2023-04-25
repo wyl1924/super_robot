@@ -1,4 +1,4 @@
-package com.wyl.super_robot.openai.entity.images;
+package com.wyl.super_robot.openai.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +18,5 @@ public enum ResponseFormat implements Serializable {
     B64_JSON("b64_json"),
     ;
 
-    private String name;
+    public String name;
 }

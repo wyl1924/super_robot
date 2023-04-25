@@ -1,5 +1,6 @@
 package com.wyl.super_robot.openai.entity.chat;
 
+import com.wyl.super_robot.openai.enums.MessageRole;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,32 +15,22 @@ public class Message {
     /**
      * 目前支持三中角色参考官网，进行情景输入：https://platform.openai.com/docs/guides/chat/introduction
      */
-    private String role;
-    private String content;
+    public String role;
+    public String content;
 
     public static Message of(String content) {
 
-        return new Message(Role.USER.getValue(), content);
+        return new Message(MessageRole.USER.getValue(), content);
     }
 
     public static Message ofSystem(String content) {
 
-        return new Message(Role.SYSTEM.getValue(), content);
+        return new Message(MessageRole.SYSTEM.getValue(), content);
     }
 
     public static Message ofAssistant(String content) {
 
-        return new Message(Role.ASSISTANT.getValue(), content);
-    }
-    @Getter
-    @AllArgsConstructor
-    public enum Role {
-
-        SYSTEM("system"),
-        USER("user"),
-        ASSISTANT("assistant"),
-        ;
-        private String value;
+        return new Message(MessageRole.ASSISTANT.getValue(), content);
     }
 
 }

@@ -13,10 +13,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 描述：
- *
- * @author https:www.unfbx.com
- *  2023-02-15
+ * @author wyl
+ * @date 2023/4/25 11:12
  */
 @Getter
 @Slf4j
@@ -24,44 +22,45 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Image implements Serializable {
-
+public class ImageEdit implements Serializable {
+    /**
+     * 必选项：描述文字，最多1000字符
+     */
     @NonNull
-    public String prompt;
+    private String prompt;
     /**
      * 为每个提示生成的完成次数。
      */
     @Builder.Default
-    public Integer n = 1;
+    private Integer n = 1;
     /**
      * 256x256
      * 512x512
      * 1024x1024
      */
     @Builder.Default
-    public String size = SizeEnum.size_512.getName();
+    private String size = SizeEnum.size_512.getName();
 
     @JsonProperty("response_format")
     @Builder.Default
-    public String responseFormat = ResponseFormat.URL.getName();
+    private String responseFormat = ResponseFormat.URL.getName();
 
-    public String user;
+    private String user;
 
-    public void setN(Integer n) {
+    public ImageEdit setN(Integer n) {
         if(n < 1){
             log.warn("n最小值1");
-            this.n = 1;
-            return;
+            n = 1;
         }
         if(n > 10){
             log.warn("n最大值10");
-            this.n = 10;
-            return;
+            n = 10;
         }
         this.n = n;
+        return this;
     }
 
-    public void setPrompt(String prompt) {
+    public ImageEdit setPrompt(String prompt) {
         if(Objects.isNull(prompt) || "".equals(prompt)){
             log.error("参数异常");
             throw new ChatException(ResultEnums.PARAM_ERROR.getMsg());
@@ -71,24 +70,30 @@ public class Image implements Serializable {
             throw new ChatException(ResultEnums.PARAM_length.getMsg());
         }
         this.prompt = prompt;
+        return this;
     }
 
-    public void setSize(SizeEnum size) {
+    public ImageEdit setSize(SizeEnum size) {
         if(Objects.isNull(size)){
             size = SizeEnum.size_512;
         }
         this.size = size.getName();
+        return this;
     }
 
-    public void setResponseFormat(ResponseFormat responseFormat) {
+    public ImageEdit setResponseFormat(ResponseFormat responseFormat) {
         if(Objects.isNull(responseFormat)){
             responseFormat = ResponseFormat.URL;
         }
         this.responseFormat = responseFormat.getName();
+        return this;
     }
 
-    public void setUser(String user) {
+    public ImageEdit setUser(String user) {
         this.user = user;
+        return this;
     }
+
 
 }
+

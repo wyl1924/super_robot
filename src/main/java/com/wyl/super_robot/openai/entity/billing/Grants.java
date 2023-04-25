@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class Grants {
-    private String object;
+    public String object;
     @JsonProperty("data")
-    private List<Datum> data;
+    public List<Datum> data;
 }

@@ -1,4 +1,4 @@
-package com.wyl.super_robot.openai.entity.images;
+package com.wyl.super_robot.openai.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +19,6 @@ public enum SizeEnum implements Serializable {
     size_256("256x256"),
 
     ;
-    private String name;
+    public String name;
 
 }

@@ -1,4 +1,4 @@
-package com.wyl.super_robot.enums;
+package com.wyl.super_robot.openai.enums;
 
 /**
  * @author wyl
