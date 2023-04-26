@@ -25,10 +25,13 @@ import java.util.Arrays;
 @Slf4j
 @Component
 public class ChatGPTUtil {
+    private ChatGPT chatGPT;
+
     @Value("${openai.secret_key}")
     private String token;
-
-    private ChatGPT chatGPT;
+    @Value("${openai.apiHost}")
+    private String apiHost;
+    private ChatGPTStream chatGPTStream;
 
     @Value("${proxy.ip}")
     private String proxyIp;
