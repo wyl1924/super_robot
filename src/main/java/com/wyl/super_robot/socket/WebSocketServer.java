@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wyl.super_robot.openai.ChatGPTStreamUtil;
 import com.wyl.super_robot.openai.entity.LocalCache;
 import com.wyl.super_robot.openai.entity.chat.Message;
+import com.wyl.super_robot.openai.enums.MessageRole;
 import com.wyl.super_robot.utils.JsonConvertKeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-@ServerEndpoint("/ws/{uid}")
+@ServerEndpoint("/ws")
 public class WebSocketServer {
     private static ChatGPTStreamUtil chatGPTStrreamUtil;
     @Autowired
@@ -51,11 +52,10 @@ public class WebSocketServer {
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("uid") String uid) {
+    public void onOpen(Session session) {
         try {
             modify(session, "id", new String(UUID.randomUUID() + ""));
             SocketSession scoketSession = new SocketSession();
-            scoketSession.setUserId(uid);
             scoketSession.setSession(session);
             webSocketMap.put(session.getId(), scoketSession);
             addOnlineCount();
@@ -76,14 +76,14 @@ public class WebSocketServer {
                 if (messages.size() >= 10) {
                     messages = messages.subList(1, 10);
                 }
-                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
+                Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
                 messages.add(currentMessage);
             } else {
-                Message currentMessage = Message.builder().content(message).role(Message.Role.USER.getValue()).build();
+                Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
                 messages.add(currentMessage);
             }
-            chatGPTStrreamUtil.chat(messages, scoketSession.getUserId(),session);
-            LocalCache.CACHE.put( scoketSession.getUserId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
+            chatGPTStrreamUtil.chat(messages, session.getId(),session);
+            LocalCache.CACHE.put( session.getId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         } catch (Exception e) {
             log.error(e.toString());
             log.error("", e);
