@@ -2,16 +2,20 @@ package com.wyl.super_robot.socket;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wyl.super_robot.openai.ChatGPTStreamUtil;
 import com.wyl.super_robot.openai.entity.LocalCache;
+import com.wyl.super_robot.openai.entity.chat.ChatCompletion;
 import com.wyl.super_robot.openai.entity.chat.Message;
 import com.wyl.super_robot.openai.enums.MessageRole;
 import com.wyl.super_robot.utils.JsonConvertKeyUtil;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -33,10 +37,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/ws")
 public class WebSocketServer {
     private static ChatGPTStreamUtil chatGPTStrreamUtil;
+
     @Autowired
     public void setOrderService(ChatGPTStreamUtil openAiStreamClient) {
         this.chatGPTStrreamUtil = openAiStreamClient;
     }
+
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
      */
@@ -55,6 +61,7 @@ public class WebSocketServer {
     public void onOpen(Session session) {
         try {
             modify(session, "id", new String(UUID.randomUUID() + ""));
+            //暂时没用
             SocketSession scoketSession = new SocketSession();
             scoketSession.setSession(session);
             webSocketMap.put(session.getId(), scoketSession);
@@ -64,26 +71,35 @@ public class WebSocketServer {
         }
 
     }
+
     @OnMessage
     public void onMessage(String message, Session session) {
         log.debug(message);
         try {
-            SocketSession scoketSession = webSocketMap.get(session.getId());
-            String messageContext = (String) LocalCache.CACHE.get(scoketSession.getUserId());
-            List<Message> messages = new ArrayList<>();
-            if (StrUtil.isNotBlank(messageContext)) {
-                messages = JSONUtil.toList(messageContext, Message.class);
-                if (messages.size() >= 10) {
-                    messages = messages.subList(1, 10);
+            if (!message.contains("{")) {
+                String messageContext = (String) LocalCache.CACHE.get(session.getId());
+                List<Message> messages = new ArrayList<>();
+                if (StrUtil.isNotBlank(messageContext)) {
+                    messages = JSONUtil.toList(messageContext, Message.class);
+                    if (messages.size() >= 10) {
+                        messages = messages.subList(1, 10);
+                    }
+                    Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
+                    messages.add(currentMessage);
+                } else {
+                    Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
+                    messages.add(currentMessage);
                 }
-                Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
-                messages.add(currentMessage);
+                chatGPTStrreamUtil.chat(messages, session.getId(), session);
+                LocalCache.CACHE.put(session.getId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
             } else {
-                Message currentMessage = Message.builder().content(message).role(MessageRole.USER.getValue()).build();
-                messages.add(currentMessage);
+                var chatCompletion = JSONObject.parseObject(message, ChatCompletion.class);
+                if (!chatCompletion.getKey().isEmpty() && !ObjectUtils.nullSafeEquals(chatCompletion.getKey(), chatGPTStrreamUtil.getToken())) {
+                    chatGPTStrreamUtil.setToken(chatCompletion.getKey());
+                    chatGPTStrreamUtil.init();
+                }
+                chatGPTStrreamUtil.chat(chatCompletion, session);
             }
-            chatGPTStrreamUtil.chat(messages, session.getId(),session);
-            LocalCache.CACHE.put( session.getId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         } catch (Exception e) {
             log.error(e.toString());
             log.error("", e);
@@ -174,7 +190,6 @@ public class WebSocketServer {
             return false;
         }
     }
-
 
 
     public static void modify(Object object, String fieldName, Object newFieldValue) throws Exception {

@@ -98,7 +98,6 @@ public class ChatGPTStream {
                     .post(RequestBody.create(MediaType.parse(ContentType.JSON.getValue()),
                             requestBody))
                     .header("Authorization", "Bearer " + key)
-
                     .build();
             factory.newEventSource(request, eventSourceListener);
 

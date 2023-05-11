@@ -6,6 +6,7 @@ import com.wyl.super_robot.openai.entity.chat.Message;
 import com.wyl.super_robot.openai.listener.ConsoleStreamListener;
 import com.wyl.super_robot.openai.listener.WebSocketStreamListener;
 import com.wyl.super_robot.utils.Proxys;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,10 @@ import java.util.List;
 
 @Slf4j
 @Component
+@Data
 public class ChatGPTStreamUtil {
     @Value("${openai.secret_key}")
-    private String token;
+    public String token;
     @Value("${openai.apiHost}")
     private String apiHost;
     private ChatGPTStream chatGPTStream;
@@ -51,6 +53,10 @@ public class ChatGPTStreamUtil {
                     .build()
                     .init();
         }
+    }
+    public void chat(ChatCompletion chatCompletion, Session session) {
+        WebSocketStreamListener listener = new WebSocketStreamListener(session);
+        chatGPTStream.streamChatCompletion(chatCompletion, listener);
     }
     public void chat(String userMessage, String user, Session session) {
         WebSocketStreamListener listener = new WebSocketStreamListener(session);

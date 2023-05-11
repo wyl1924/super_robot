@@ -86,7 +86,7 @@ public class ChatCompletion implements Serializable {
      * 用户唯一值，确保接口不被重复调用
      */
     public String user;
-
+public String key;
 
     @Getter
     public enum Model {
@@ -133,6 +133,8 @@ public class ChatCompletion implements Serializable {
         public void setMsg(String msg) {
             this.msg = msg;
         }
+
+
     }
 
 }

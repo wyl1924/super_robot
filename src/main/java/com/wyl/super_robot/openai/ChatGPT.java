@@ -60,10 +60,12 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 public class ChatGPT {
     /**
-     * keys
+     * key
      */
     private String apiKey;
-
+    /**
+     * keys
+     */
     private List<String> apiKeyList;
     /**
      * 自定义api host使用builder的方式构造client
@@ -122,9 +124,6 @@ public class ChatGPT {
         client.connectTimeout(timeout, TimeUnit.SECONDS);
         client.writeTimeout(timeout, TimeUnit.SECONDS);
         client.readTimeout(timeout, TimeUnit.SECONDS);
-        if (Objects.nonNull(proxy)) {
-            client.proxy(proxy);
-        }
         OkHttpClient httpClient = client.build();
         this.okHttpClient = httpClient;
 
