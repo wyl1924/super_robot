@@ -17,14 +17,21 @@ import com.wyl.super_robot.openai.entity.chat.ChatCompletion;
 import com.wyl.super_robot.openai.entity.chat.ChatCompletionResponse;
 import com.wyl.super_robot.openai.entity.chat.Message;
 import com.wyl.super_robot.openai.entity.common.OpenAiResponse;
+import com.wyl.super_robot.openai.entity.completions.CompletionResponse;
 import com.wyl.super_robot.openai.entity.embeddings.Embedding;
 import com.wyl.super_robot.openai.entity.embeddings.EmbeddingResponse;
 import com.wyl.super_robot.openai.entity.files.DeleteResponse;
 import com.wyl.super_robot.openai.entity.files.File;
 import com.wyl.super_robot.openai.entity.files.UploadFileResponse;
+import com.wyl.super_robot.openai.entity.fineTune.Event;
+import com.wyl.super_robot.openai.entity.fineTune.FineTune;
+import com.wyl.super_robot.openai.entity.fineTune.FineTuneDeleteResponse;
+import com.wyl.super_robot.openai.entity.fineTune.FineTuneResponse;
 import com.wyl.super_robot.openai.entity.images.*;
 import com.wyl.super_robot.openai.entity.models.ListModels;
 import com.wyl.super_robot.openai.entity.models.Model;
+import com.wyl.super_robot.openai.entity.moderations.Moderation;
+import com.wyl.super_robot.openai.entity.moderations.ModerationResponse;
 import com.wyl.super_robot.openai.entity.transcriptions.Transcriptions;
 import com.wyl.super_robot.openai.entity.transcriptions.Translations;
 import com.wyl.super_robot.openai.entity.transcriptions.WhisperResponse;
@@ -39,6 +46,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.processing.Completion;
 import java.math.BigDecimal;
 import java.net.Proxy;
 import java.time.LocalDate;
@@ -176,6 +184,17 @@ public class ChatGPT {
     public ChatCompletionResponse chatCompletion(List<Message> messages) {
         ChatCompletion chatCompletion = ChatCompletion.builder().messages(messages).build();
         return this.chatCompletion(chatCompletion);
+    }
+
+    /**
+     * 问答接口
+     *
+     * @param completion
+     * @return CompletionResponse
+     */
+    public CompletionResponse completions(Completion completion) {
+        Single<CompletionResponse> completions = this.apiClient.completions(completion);
+        return completions.blockingGet();
     }
 
     public String chat(List<String> message) {
@@ -341,6 +360,18 @@ public class ChatGPT {
     }
 
     /**
+     * 文本审核
+     *
+     * @param input 待检测数据集合
+     * @return ModerationResponse
+     */
+    public ModerationResponse moderations(List<String> input) {
+        Moderation moderation = Moderation.builder().input(input).build();
+        Single<ModerationResponse> responseSingle = this.apiClient.moderations(moderation);
+        return responseSingle.blockingGet();
+    }
+
+    /**
      * 上传文件
      *
      * @param file
@@ -459,7 +490,82 @@ public class ChatGPT {
         }
     }
 
+    /**
+     * 创建微调模型
+     *
+     * @param fineTune
+     * @return FineTuneResponse
+     */
+    public FineTuneResponse fineTune(FineTune fineTune) {
+        Single<FineTuneResponse> fineTuneResponse = this.apiClient.fineTune(fineTune);
+        return fineTuneResponse.blockingGet();
+    }
 
+    /**
+     * 创建微调模型
+     *
+     * @param trainingFileId 文件id，文件上传返回的id
+     * @return FineTuneResponse
+     */
+    public FineTuneResponse fineTune(String trainingFileId) {
+        FineTune fineTune = FineTune.builder().trainingFile(trainingFileId).build();
+        return this.fineTune(fineTune);
+    }
+
+    /**
+     * 微调模型列表
+     *
+     * @return FineTuneResponse list
+     */
+    public List<FineTuneResponse> fineTunes() {
+        Single<OpenAiResponse<FineTuneResponse>> fineTunes = this.apiClient.fineTunes();
+        return fineTunes.blockingGet().getData();
+    }
+
+    /**
+     * 检索微调作业
+     *
+     * @param fineTuneId
+     * @return FineTuneResponse
+     */
+    public FineTuneResponse retrieveFineTune(String fineTuneId) {
+        Single<FineTuneResponse> fineTune = this.apiClient.retrieveFineTune(fineTuneId);
+        return fineTune.blockingGet();
+    }
+
+    /**
+     * 取消微调作业
+     *
+     * @param fineTuneId
+     * @return FineTuneResponse
+     */
+    public FineTuneResponse cancelFineTune(String fineTuneId) {
+        Single<FineTuneResponse> fineTune = this.apiClient.cancelFineTune(fineTuneId);
+        return fineTune.blockingGet();
+    }
+
+    /**
+     * 微调作业事件列表
+     *
+     * @param fineTuneId
+     * @return Event List
+     */
+    public List<Event> fineTuneEvents(String fineTuneId) {
+        Single<OpenAiResponse<Event>> events = this.apiClient.fineTuneEvents(fineTuneId);
+        return events.blockingGet().getData();
+    }
+
+    /**
+     * 删除微调作业模型
+     * Delete a fine-tuned model. You must have the Owner role in your organization.
+     *
+     * @param model
+     * @return FineTuneDeleteResponse
+     */
+    public FineTuneDeleteResponse deleteFineTuneModel(String model) {
+        Single<FineTuneDeleteResponse> delete = this.apiClient.deleteFineTuneModel(model);
+        return delete.blockingGet();
+    }
     /**
      * 余额查询
      */

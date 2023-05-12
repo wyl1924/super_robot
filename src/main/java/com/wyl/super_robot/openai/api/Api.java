@@ -14,10 +14,16 @@ import com.wyl.super_robot.openai.entity.embeddings.EmbeddingResponse;
 import com.wyl.super_robot.openai.entity.files.DeleteResponse;
 import com.wyl.super_robot.openai.entity.files.File;
 import com.wyl.super_robot.openai.entity.files.UploadFileResponse;
+import com.wyl.super_robot.openai.entity.fineTune.Event;
+import com.wyl.super_robot.openai.entity.fineTune.FineTune;
+import com.wyl.super_robot.openai.entity.fineTune.FineTuneDeleteResponse;
+import com.wyl.super_robot.openai.entity.fineTune.FineTuneResponse;
 import com.wyl.super_robot.openai.entity.images.Image;
 import com.wyl.super_robot.openai.entity.images.ImageResponse;
 import com.wyl.super_robot.openai.entity.models.ListModels;
 import com.wyl.super_robot.openai.entity.models.Model;
+import com.wyl.super_robot.openai.entity.moderations.Moderation;
+import com.wyl.super_robot.openai.entity.moderations.ModerationResponse;
 import com.wyl.super_robot.openai.entity.transcriptions.WhisperResponse;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
@@ -154,7 +160,14 @@ public interface Api {
     @Streaming
     @GET("v1/files/{file_id}/content")
     Single<ResponseBody> retrieveFileContent(@Path("file_id") String fileId);
-
+    /**
+     * 文本审核
+     *
+     * @param moderation
+     * @return Single ModerationResponse
+     */
+    @POST("v1/moderations")
+    Single<ModerationResponse> moderations(@Body Moderation moderation);
     /**
      * 语音转文字
      *
@@ -208,5 +221,55 @@ public interface Api {
     @GET("v1/dashboard/billing/usage")
     Single<BillingUsage> billingUsage(@Query("start_date") LocalDate starDate, @Query("end_date") LocalDate endDate);
 
+    /**
+     * 创建微调作业
+     *
+     * @param fineTune
+     * @return Single FineTuneResponse
+     */
+    @POST("v1/fine-tunes")
+    Single<FineTuneResponse> fineTune(@Body FineTune fineTune);
+
+    /**
+     * 微调作业集合
+     *
+     * @return Single OpenAiResponse FineTuneResponse
+     */
+    @GET("v1/fine-tunes")
+    Single<OpenAiResponse<FineTuneResponse>> fineTunes();
+
+
+    /**
+     * 检索微调作业
+     *
+     * @return Single FineTuneResponse
+     */
+    @GET("v1/fine-tunes/{fine_tune_id}")
+    Single<FineTuneResponse> retrieveFineTune(@Path("fine_tune_id") String fineTuneId);
+
+    /**
+     * 取消微调作业
+     *
+     * @return Single FineTuneResponse
+     */
+    @POST("v1/fine-tunes/{fine_tune_id}/cancel")
+    Single<FineTuneResponse> cancelFineTune(@Path("fine_tune_id") String fineTuneId);
+
+    /**
+     * 微调作业事件列表
+     *
+     * @return Single OpenAiResponse Event
+     */
+    @GET("v1/fine-tunes/{fine_tune_id}/events")
+    Single<OpenAiResponse<Event>> fineTuneEvents(@Path("fine_tune_id") String fineTuneId);
+
+    /**
+     * 删除微调作业模型
+     * Delete a fine-tuned model. You must have the Owner role in your organization.
+     *
+     * @return Single DeleteResponse
+     */
+    @DELETE("v1/models/{model}")
+    Single<FineTuneDeleteResponse> deleteFineTuneModel(@Path("model") String model);
 
 }

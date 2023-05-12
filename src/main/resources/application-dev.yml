@@ -30,6 +30,9 @@ System:
 proxy: #如果在国内访问，使用这个https://api.openai.com/
   ip: ""
   port: 8899
-
+wechat:
+  token:
+  encodingAESKey:
+  corpId:
 
 

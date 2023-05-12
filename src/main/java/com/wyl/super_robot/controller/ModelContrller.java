@@ -2,6 +2,7 @@ package com.wyl.super_robot.controller;
 
 import com.wyl.super_robot.openai.ChatGPTUtil;
 import com.wyl.super_robot.openai.entity.models.ListModels;
+import com.wyl.super_robot.openai.entity.models.Model;
 import com.wyl.super_robot.utils.ResponseData;
 import io.reactivex.Single;
 import io.swagger.annotations.Api;
@@ -22,9 +23,14 @@ public class ModelContrller {
     @Autowired
     private ChatGPTUtil chatGPTUtil;
     @RequestMapping(value="models",method = RequestMethod.GET)
-    @Operation(summary = "查看用户状态")
+    @Operation(summary = "huoqu模型列表")
     public Single<ListModels> listModels() {
-       var ss= chatGPTUtil.listModels();
-       return ss;
+      return chatGPTUtil.chatGPT.listModels();
+
+    }
+    @RequestMapping(value="Models/{id}",method = RequestMethod.GET)
+    @Operation(summary = "查看模型")
+    public Single<Model> getModels(String id) {
+        return chatGPTUtil.chatGPT.getModel(id);
     }
 }
