@@ -32,7 +32,7 @@ public class ImagesCpntroller {
 
     @PostMapping("generations")
     @Operation(summary = "根据提示创建图像")
-    public ImageResponse genImages(@Body Image image) {
+    public ImageResponse genImages(@RequestBody Image image) {
         var images = chatGPTUtil.chatGPT.genImages(image);
         return images;
     }
