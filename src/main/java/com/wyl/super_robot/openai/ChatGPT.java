@@ -566,6 +566,7 @@ public class ChatGPT {
         Single<FineTuneDeleteResponse> delete = this.apiClient.deleteFineTuneModel(model);
         return delete.blockingGet();
     }
+
     /**
      * 余额查询
      */

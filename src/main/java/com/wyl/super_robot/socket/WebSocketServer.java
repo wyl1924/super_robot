@@ -94,10 +94,11 @@ public class WebSocketServer {
                 LocalCache.CACHE.put(session.getId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
             } else {
                 var chatCompletion = JSONObject.parseObject(message, ChatCompletion.class);
-                if (!chatCompletion.getKey().isEmpty() && !ObjectUtils.nullSafeEquals(chatCompletion.getKey(), chatGPTStrreamUtil.getToken())) {
+                if (chatCompletion.getKey() != null && !chatCompletion.getKey().isEmpty() && !ObjectUtils.nullSafeEquals(chatCompletion.getKey(), chatGPTStrreamUtil.getToken())) {
                     chatGPTStrreamUtil.setToken(chatCompletion.getKey());
                     chatGPTStrreamUtil.init();
                 }
+                chatCompletion.setKey(null);
                 chatGPTStrreamUtil.chat(chatCompletion, session);
             }
         } catch (Exception e) {

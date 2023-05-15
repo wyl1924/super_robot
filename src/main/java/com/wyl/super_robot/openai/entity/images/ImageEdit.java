@@ -73,22 +73,6 @@ public class ImageEdit implements Serializable {
         return this;
     }
 
-    public ImageEdit setSize(SizeEnum size) {
-        if(Objects.isNull(size)){
-            size = SizeEnum.size_512;
-        }
-        this.size = size.getName();
-        return this;
-    }
-
-    public ImageEdit setResponseFormat(ResponseFormat responseFormat) {
-        if(Objects.isNull(responseFormat)){
-            responseFormat = ResponseFormat.URL;
-        }
-        this.responseFormat = responseFormat.getName();
-        return this;
-    }
-
     public ImageEdit setUser(String user) {
         this.user = user;
         return this;

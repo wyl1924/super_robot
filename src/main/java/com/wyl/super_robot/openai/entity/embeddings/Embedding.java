@@ -31,14 +31,6 @@ public class Embedding implements Serializable {
 
     public String user;
 
-    public void setModel(EmbeddingModel model) {
-        if (Objects.isNull(model)) {
-            model = EmbeddingModel.TEXT_EMBEDDING_ADA_002;
-        }
-        this.model = model.getName();
-    }
-
-
     public void setUser(String user) {
         this.user = user;
     }

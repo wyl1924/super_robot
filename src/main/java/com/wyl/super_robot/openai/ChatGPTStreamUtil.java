@@ -62,7 +62,7 @@ public class ChatGPTStreamUtil {
         WebSocketStreamListener listener = new WebSocketStreamListener(session);
         Message message = Message.of(userMessage);
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .user(user)
+                .user(session.getId())
                 .messages(Arrays.asList(message))
                 .model(ChatCompletion.Model.GPT_3_5_TURBO.getMsg())
                 .build();
@@ -72,7 +72,7 @@ public class ChatGPTStreamUtil {
     public void chat(List<Message> messages, String user, Session session) {
         WebSocketStreamListener listener = new WebSocketStreamListener(session);
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .user(user)
+                .user(session.getId())
                 .messages(messages)
                 .model(ChatCompletion.Model.GPT_3_5_TURBO.getMsg())
                 .stream(true).build();

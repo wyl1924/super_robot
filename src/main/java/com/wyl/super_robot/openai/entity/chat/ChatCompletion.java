@@ -62,7 +62,7 @@ public class ChatCompletion implements Serializable {
     /**
      * 停用词
      */
-    public List<String> stop;
+    public String stop;
     /**
      * 3.5 最大支持4096
      * 4.0 最大32k

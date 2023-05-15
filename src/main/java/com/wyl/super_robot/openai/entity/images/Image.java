@@ -39,7 +39,7 @@ public class Image implements Serializable {
      * 1024x1024
      */
     @Builder.Default
-    public String size = SizeEnum.size_512.getName();
+    public String size = "512x512";
 
     @JsonProperty("response_format")
     @Builder.Default
@@ -71,20 +71,6 @@ public class Image implements Serializable {
             throw new ChatException(ResultEnums.PARAM_length.getMsg());
         }
         this.prompt = prompt;
-    }
-
-    public void setSize(SizeEnum size) {
-        if(Objects.isNull(size)){
-            size = SizeEnum.size_512;
-        }
-        this.size = size.getName();
-    }
-
-    public void setResponseFormat(ResponseFormat responseFormat) {
-        if(Objects.isNull(responseFormat)){
-            responseFormat = ResponseFormat.URL;
-        }
-        this.responseFormat = responseFormat.getName();
     }
 
     public void setUser(String user) {

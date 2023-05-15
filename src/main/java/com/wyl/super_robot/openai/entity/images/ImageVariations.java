@@ -2,14 +2,14 @@ package com.wyl.super_robot.openai.entity.images;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wyl.super_robot.enums.ResultEnums;
 import com.wyl.super_robot.openai.enums.ResponseFormat;
 import com.wyl.super_robot.openai.enums.SizeEnum;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.wyl.super_robot.openai.exception.ChatException;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,12 +17,12 @@ import java.util.Objects;
  * @author wyl
  * @date 2023/4/25 11:36
  */
-@Getter
 @Slf4j
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class ImageVariations implements Serializable {
     /**
      * 为每个提示生成的完成次数。
@@ -42,8 +42,6 @@ public class ImageVariations implements Serializable {
     private String responseFormat = ResponseFormat.URL.getName();
 
     private String user;
-
-
     public void setN(Integer n) {
         if (n < 1) {
             log.warn("n最小值1");
@@ -59,19 +57,6 @@ public class ImageVariations implements Serializable {
     }
 
 
-    public void setSize(SizeEnum size) {
-        if (Objects.isNull(size)) {
-            size = SizeEnum.size_512;
-        }
-        this.size = size.getName();
-    }
-
-    public void setResponseFormat(ResponseFormat responseFormat) {
-        if (Objects.isNull(responseFormat)) {
-            responseFormat = ResponseFormat.URL;
-        }
-        this.responseFormat = responseFormat.getName();
-    }
 
     public void setUser(String user) {
         this.user = user;

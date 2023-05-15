@@ -35,12 +35,7 @@ public class Moderation implements Serializable {
         this.input = input;
     }
 
-    public void setModel(Model model) {
-        if (Objects.isNull(model)) {
-            model = Model.TEXT_MODERATION_LATEST;
-        }
-        this.model = model.getName();
-    }
+
 
     @Getter
     @AllArgsConstructor
