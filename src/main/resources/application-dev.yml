@@ -11,6 +11,8 @@ spring:
       max-request-size: 1024MB #最大请求文件的大小
       max-file-size: 1024MB #设置单个文件最大长度
       file-size-threshold: 5MB #当文件达到多少时进行磁盘写
+  application:
+    name: srobot
 swagger:
   enable: true
 jwt:
@@ -20,9 +22,9 @@ jwt:
   expiration: 86400000
   tokenHead: "Bearer "
 file:
-  url: D:\files
+  url: /opt/files
 logs:
-  path: D:\logs
+  path: /opt/logs
 
 System:
   Version: 1.0

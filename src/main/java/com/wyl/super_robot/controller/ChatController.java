@@ -34,6 +34,7 @@ public class ChatController {
     @PostMapping("completions")
     @Operation(summary = "chat原始")
     public ChatCompletionResponse chatCompletion(@RequestBody ChatCompletion chatCompletion) {
+        log.info("chatCompletion:{}", chatCompletion.toString());
         var chat = chatGPTUtil.chatGPT.chatCompletion(chatCompletion);
         return chat;
     }

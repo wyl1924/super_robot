@@ -77,6 +77,7 @@ public class WebSocketServer {
         log.debug(message);
         try {
             if (!message.contains("{")) {
+                log.info("message:{}", message);
                 String messageContext = (String) LocalCache.CACHE.get(session.getId());
                 List<Message> messages = new ArrayList<>();
                 if (StrUtil.isNotBlank(messageContext)) {
@@ -94,6 +95,7 @@ public class WebSocketServer {
                 LocalCache.CACHE.put(session.getId(), JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
             } else {
                 var chatCompletion = JSONObject.parseObject(message, ChatCompletion.class);
+                log.info("chatCompletion:{}", message);
                 if (chatCompletion.getKey() != null && !chatCompletion.getKey().isEmpty() && !ObjectUtils.nullSafeEquals(chatCompletion.getKey(), chatGPTStrreamUtil.getToken())) {
                     chatGPTStrreamUtil.setToken(chatCompletion.getKey());
                     chatGPTStrreamUtil.init();

@@ -5,7 +5,7 @@
 <!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
 <configuration>
 	<!-- name的值是变量的名称，source 配置文件对应配置内容。定义后，可以使“${}”来使用变量。 -->
-	<springProperty  name="log" source="log.path" />
+	<springProperty  name="log" source="logs.path" />
 	<springProperty  name="pname" source="spring.application.name" />
 	<!--0. 日志格式和颜色渲染 -->
 	<!-- 彩色日志依赖的渲染类 -->
@@ -30,7 +30,7 @@
 		<File>${log}/info.log</File>
 		<!-- 日志记录器的滚动策略，按日期，按大小记录 -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log}/${pname}/info-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${log}/info-%d{yyyy-MM-dd}.log</fileNamePattern>
 			<!--日志文档保留天数-->
 			<maxHistory>60</maxHistory>
 			<!--日志文档大小-->
@@ -52,7 +52,7 @@
 		</filter>
 		<File>${log}/error.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${log}/${pname}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${log}/error-%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>60</maxHistory>
 			<totalSizeCap>20GB</totalSizeCap>
 		</rollingPolicy>
@@ -90,6 +90,8 @@
                     基本策略(root级) + 根据profile在启动时, logger标签中定制化package日志级别(优先级高于上面的root级)-->
 	<springProfile name="dev">
 		<root level="info">
+			<appender-ref ref="INFO_FILE" />
+			<appender-ref ref="ERROR_FILE" />
 			<appender-ref ref="STDOUT" />
 		</root>
 		<logger name="com.zst" level="debug"/> <!-- 开发环境, 指定某包日志为debug级 -->

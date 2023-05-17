@@ -1,7 +1,5 @@
 package com.wyl.super_robot.openai.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wyl.super_robot.openai.entity.chat.ChatCompletionResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.websocket.Session;
@@ -28,15 +26,10 @@ public class WebSocketStreamListener  extends AbstractStreamListener {
     @Override
     public void onMsg(String message) {
         try {
-            log.info("OpenAI返回数据：{}", message);
             if (message.equals("[DONE]")) {
-                log.info("OpenAI返回数据结束了");
                 session.getBasicRemote().sendText("[DONE]");
                 return;
             }
-//            ObjectMapper mapper = new ObjectMapper();
-//            ChatCompletionResponse completionResponse = mapper.readValue(message, ChatCompletionResponse.class); // 读取Json
-//            String delta = mapper.writeValueAsString(completionResponse.getChoices().get(0).getDelta());
             session.getBasicRemote().sendText(message);
         } catch (IOException e) {
             e.printStackTrace();

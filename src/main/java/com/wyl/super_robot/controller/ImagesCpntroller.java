@@ -38,6 +38,7 @@ public class ImagesCpntroller {
     @PostMapping("generations")
     @Operation(summary = "根据提示创建图像")
     public ImageResponse genImages(@RequestBody Image image) {
+        log.info("image:{}", image.getPrompt());
         var images = chatGPTUtil.chatGPT.genImages(image);
         return images;
     }
@@ -52,6 +53,7 @@ public class ImagesCpntroller {
     @PostMapping("edits")
     @Operation(summary = "根据提示修改图像")
     public List<Item> editImages(MultipartFile image, String prompt) {
+        log.info("image:{},prompt:{}", image.getOriginalFilename(), prompt);
         try {
             File file = FileUtil.convertMultipartFileToFile(image);
             var images = chatGPTUtil.chatGPT.editImages(file, prompt);
